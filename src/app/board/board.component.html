@@ -9,7 +9,7 @@
     <div class="row" *ngFor="let row of board">
       <div class="cell" *ngFor="let cell of row">
         <div *ngIf="cell.opened" class="opened">
-          <i [ngClass]="{'fas fa-bomb': cell.isMine}"></i>
+          <i [ngClass]="{'fa fa-bomb': cell.isMine}"></i>
           <span>{{ cell.nearMines }}</span>
         </div>
         <div *ngIf="!cell.opened" [ngClass]="{'correct': gameOver && cell.hasFlag && cell.isMine}" class="closed" (mousedown)="openCell(cell, $event)" (contextmenu)="false">
