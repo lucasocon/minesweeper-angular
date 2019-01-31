@@ -1,0 +1,35 @@
+<div class="container">
+  <h4 *ngIf="gameOver">GAME OVER</h4>
+  <h4 *ngIf="!gameOver">COME ONE!</h4>
+  <div class="game-board">
+    <div class="row" *ngFor="let row of board">
+      <div class="cell" *ngFor="let cell of row; let i = index" (click)="openCell(cell)">
+        <div *ngIf="cell.opened" class="opened">
+          <i [ngClass]="{'fas fa-bomb': cell.isMine}"></i>
+          <span>{{ cell.nearMines }}</span>
+        </div>
+        <div *ngIf="!cell.opened" [ngClass]="{'correct': gameOver && cell.isMine}" class="closed" (click)="openCell(cell)">
+          <i ng-class="{'fa fa-question': cell.hasFlag}"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="input-container">
+      <label for="boardColumns">Rows </label>
+      <input type="text" [(ngModel)]="boardRows" min="6">
+    </div>
+    <div class="input-container">
+      <label for="boardColumns">Colums </label>
+      <input type="text" [(ngModel)]="boardColumns" min="6">
+    </div>
+    <div class="input-container">
+      <label for="boardColumns">Quantity of mines </label>
+      <input type="text" [(ngModel)]="mines" min="4">
+    </div>
+    <div class="input-container">
+      <button (click)="newGame()">New Game</button>
+    </div>
+  </div>
+</div>
