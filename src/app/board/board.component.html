@@ -12,7 +12,7 @@
           <i [ngClass]="{'fas fa-bomb': cell.isMine}"></i>
           <span>{{ cell.nearMines }}</span>
         </div>
-        <div *ngIf="!cell.opened" [ngClass]="{'correct': gameOver && cell.hasFlag && cell.isMine}" class="closed" (mousedown)="openCell(cell, $event)">
+        <div *ngIf="!cell.opened" [ngClass]="{'correct': gameOver && cell.hasFlag && cell.isMine}" class="closed" (mousedown)="openCell(cell, $event)" (contextmenu)="false">
           <i [ngClass]="{'fa fa-question': cell.hasFlag}"></i>
         </div>
       </div>
