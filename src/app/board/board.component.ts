@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { timer } from 'rxjs';
 import {
   find,
   times, 
@@ -19,16 +20,19 @@ export class BoardComponent implements OnInit {
   boardRows: number;
   boardColumns: number;
   mines: number;
-  remainingFlags: number 
+  remainingFlags: number;
   maxNumberOfMines: number;
   board: any = [];
-  gameOver: boolean =  false;
+  gameOver: boolean = false;
+  time: number;
+  subscribeTimer: any;
 
   constructor() {};
   ngOnInit() {
     this.setupBoard();
     this.addMines();
     this.setNearMines();
+    this.observableTimer();
   }
 
   setupBoard() {
@@ -54,11 +58,21 @@ export class BoardComponent implements OnInit {
   }
 
   newGame() {
+    this.time = 0;
+    this.gameOver = false;
+    this.subscribeTimer.unsubscribe();
     this.setupBoard();
     this.addMines();
     this.setNearMines();
-    this.gameOver = false;
+    this.observableTimer();
   };
+
+  observableTimer() {
+    const source = timer(2000, 1000);
+    this.subscribeTimer = source.subscribe(val => {
+      this.time = val;
+    });
+  }
 
   openCell(cell, event) {
     if(event && event.which && event.which === 3) {
@@ -66,7 +80,10 @@ export class BoardComponent implements OnInit {
       return false;
     }
 
-    if (this.gameOver) return;
+    if (this.gameOver) {
+      this.subscribeTimer.unsubscribe();
+      return;
+    }
 
     let flatBoard = flatten(this.board);
     cell.opened = true;
