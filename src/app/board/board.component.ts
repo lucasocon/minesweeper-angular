@@ -18,10 +18,11 @@ import {
 export class BoardComponent implements OnInit {
   boardRows: number;
   boardColumns: number;
-  mines: number = 4;
-  maxNumberOfMines: number = (this.boardColumns * this.boardRows) - 1;
-  board : any = [];
-  gameOver:  boolean =  false;
+  mines: number;
+  remainingFlags: number 
+  maxNumberOfMines: number;
+  board: any = [];
+  gameOver: boolean =  false;
 
   constructor() {};
   ngOnInit() {
@@ -34,6 +35,10 @@ export class BoardComponent implements OnInit {
     console.log(this)
     this.boardColumns = this.boardColumns || 6
     this.boardRows = this.boardRows || 6
+    this.mines = this.mines || 4;
+    this.remainingFlags = this.mines;
+    this.maxNumberOfMines = (this.boardColumns * this.boardRows) - 1;
+
     this.board = times(this.boardRows, (row) => {
       return times(this.boardColumns, (col) => {
         return {
@@ -49,14 +54,18 @@ export class BoardComponent implements OnInit {
   }
 
   newGame() {
-    console.log("<<<<")
     this.setupBoard();
     this.addMines();
     this.setNearMines();
     this.gameOver = false;
   };
 
-  openCell(cell) {
+  openCell(cell, event) {
+    if(event && event.which && event.which === 3) {
+      this.toggleFlag(cell);
+      return false;
+    }
+
     if (this.gameOver) return;
 
     let flatBoard = flatten(this.board);
@@ -68,7 +77,7 @@ export class BoardComponent implements OnInit {
 
     forEach(toReveal, (cell) => {
       let cell_to_open = find(this.board[cell.row], (e) => { return e.col == cell.col; });
-      this.openCell(cell_to_open);
+      this.openCell(cell_to_open, event);
     });
 
     this.gameOver = cell.isMine || this.getClosedNonMines().length === 0;
@@ -105,5 +114,13 @@ export class BoardComponent implements OnInit {
       });
     });
     return cells;
+  }
+
+  toggleFlag(cell : any) {
+    if (this.gameOver) return;
+    if (this.remainingFlags === 0 && !cell.hasFlag) return;
+    
+    cell.hasFlag = !cell.hasFlag;
+    this.remainingFlags -= cell.hasFlag ? 1 : -1;
   }
 }

@@ -1,15 +1,19 @@
 <div class="container">
   <h4 *ngIf="gameOver">GAME OVER</h4>
   <h4 *ngIf="!gameOver">COME ONE!</h4>
+
+  <div>Mines count: {{ remainingFlags }}</div>
+  <hr>
+
   <div class="game-board">
     <div class="row" *ngFor="let row of board">
-      <div class="cell" *ngFor="let cell of row; let i = index" (click)="openCell(cell)">
+      <div class="cell" *ngFor="let cell of row">
         <div *ngIf="cell.opened" class="opened">
           <i [ngClass]="{'fas fa-bomb': cell.isMine}"></i>
           <span>{{ cell.nearMines }}</span>
         </div>
-        <div *ngIf="!cell.opened" [ngClass]="{'correct': gameOver && cell.isMine}" class="closed" (click)="openCell(cell)">
-          <i ng-class="{'fa fa-question': cell.hasFlag}"></i>
+        <div *ngIf="!cell.opened" [ngClass]="{'correct': gameOver && cell.hasFlag && cell.isMine}" class="closed" (mousedown)="openCell(cell, $event)">
+          <i [ngClass]="{'fa fa-question': cell.hasFlag}"></i>
         </div>
       </div>
     </div>
