@@ -1,11 +1,14 @@
 * {
   margin: 0;
-  padding: 0;
 }
 
 .container {
   text-align: center;
   margin: 50px;
+}
+
+.centered {
+  justify-content: center;
 }
 
 .game-board {
